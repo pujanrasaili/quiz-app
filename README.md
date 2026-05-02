@@ -1,16 +1,58 @@
-# React + Vite
+# 🧠 Quiz App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek, interactive quiz app built with React + Vite.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- ✅ 10 carefully crafted questions
+- ⏱ 15 second countdown timer per question
+- ⭐ Live score tracking
+- ✅ Instant answer feedback (green = correct, red = wrong)
+- 📋 Full answer review at the end
+- 🎯 Performance emoji based on your score
+- 💫 Smooth animations & modern glassmorphism UI
 
-## React Compiler
+## 🚀 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+👉 [Coming soon on Vercel]
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [React](https://react.dev/) — UI library
+- [Vite](https://vitejs.dev/) — lightning-fast bundler
+- CSS Variables & Glassmorphism — for modern styling
+
+## 📦 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## 🎮 How to Play
+
+1. Click **Start Quiz**
+2. Read each question carefully
+3. Select your answer before the **15s timer** runs out
+4. See instant feedback after each answer
+5. Review all answers at the end
+6. Try to beat your high score!
+
+## 📁 Project Structure
+quiz-app/
+├── src/
+│   ├── App.jsx      # Main component & quiz logic
+│   ├── App.css      # Styles & animations
+│   └── main.jsx     # Entry point
+├── index.html
+└── package.json
+
+## 📄 License
+
+MIT
