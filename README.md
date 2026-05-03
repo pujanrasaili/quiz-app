@@ -1,26 +1,30 @@
 # 🧠 Quiz App
 
-A sleek, interactive quiz app built with React + Vite.
+A sleek, feature-rich quiz app built with React + Vite.
 
 ## ✨ Features
 
-- ✅ 10 carefully crafted questions
-- ⏱ 15 second countdown timer per question
-- ⭐ Live score tracking
-- ✅ Instant answer feedback (green = correct, red = wrong)
-- 📋 Full answer review at the end
-- 🎯 Performance emoji based on your score
-- 💫 Smooth animations & modern glassmorphism UI
+- 🔬📜⚽🌍 **4 Categories** — Science, History, Sports, Geography
+- ⚡ **3 Difficulty Levels** — Easy (20s), Medium (15s), Hard (10s)
+- ⏱ **Countdown Timer** per question with danger animation
+- ⭐ **Live score tracking** during the quiz
+- 🏆 **High score tracking** saved locally per category & difficulty
+- 🔊 **Sound effects** with mute toggle
+- ✅ **Instant answer feedback** (green = correct, red = wrong)
+- 📋 **Full answer review** at the end
+- 🎯 **Performance emoji** based on your score
+- 💫 **Smooth animations** & modern glassmorphism UI
 
 ## 🚀 Live Demo
 
-👉 [Coming soon on Vercel]
+👉 [quiz-app on Vercel](https://quiz-app.vercel.app)
 
 ## 🛠 Tech Stack
 
 - [React](https://react.dev/) — UI library
 - [Vite](https://vitejs.dev/) — lightning-fast bundler
-- CSS Variables & Glassmorphism — for modern styling
+- Web Audio API — for sound effects
+- CSS Glassmorphism — for modern styling
 
 ## 📦 Getting Started
 
@@ -37,14 +41,23 @@ npm run build
 
 ## 🎮 How to Play
 
-1. Click **Start Quiz**
-2. Read each question carefully
-3. Select your answer before the **15s timer** runs out
-4. See instant feedback after each answer
-5. Review all answers at the end
-6. Try to beat your high score!
+1. Select a **category** (Science, History, Sports, Geography)
+2. Choose a **difficulty** (Easy, Medium, Hard)
+3. Click **Start Quiz**
+4. Answer before the **timer** runs out
+5. See instant feedback after each answer
+6. Review all answers & beat your **high score**!
+
+## ⚡ Difficulty Levels
+
+| Level | Time per Question | 
+|-------|------------------|
+| Easy | 20 seconds |
+| Medium | 15 seconds |
+| Hard | 10 seconds |
 
 ## 📁 Project Structure
+
 quiz-app/
 ├── src/
 │   ├── App.jsx      # Main component & quiz logic
