@@ -113,17 +113,11 @@ const DIFF_COLORS = { Easy: "#2dc653", Medium: "#f4a261", Hard: "#e94560" };
 const DIFF_TIMES = { Easy: 20, Medium: 15, Hard: 10 };
 const DIFF_COUNT = { Easy: 5, Medium: 8, Hard: 10 };
 
-function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function getQuestions(cat, diff) {
   const count = DIFF_COUNT[diff];
-  const shuffled = shuffle(allQuestions[cat].questions);
-  return shuffled.slice(0, count).map(q => ({
-    ...q,
-    options: shuffle(q.options),
-  }));
+  return shuffle(allQuestions[cat].questions).slice(0, count).map(q => ({ ...q, options: shuffle(q.options) }));
 }
 
 export default function App() {
@@ -137,7 +131,10 @@ export default function App() {
   const [answers, setAnswers] = useState([]);
   const [timer, setTimer] = useState(15);
   const [timerInterval, setTimerInterval] = useState(null);
-  const [highScores, setHighScores] = useState(() => JSON.parse(localStorage.getItem("quizHighScores") || "{}"));
+  const [playerName, setPlayerName] = useState("");
+  const [nameInput, setNameInput] = useState("");
+  const [leaderboard, setLeaderboard] = useState(() => JSON.parse(localStorage.getItem("quizLeaderboard") || "[]"));
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   const startQuiz = (cat, diff) => {
     const qs = getQuestions(cat, diff);
@@ -176,13 +173,20 @@ export default function App() {
     const next = current + 1;
     if (next >= questions.length) {
       clearInterval(timerInterval);
-      const key = `${category}-${difficulty}`;
-      const prev = highScores[key] || 0;
-      if (score > prev) {
-        const updated = { ...highScores, [key]: score };
-        setHighScores(updated);
-        localStorage.setItem("quizHighScores", JSON.stringify(updated));
-      }
+      const finalScore = score + (selected && selected === questions[current]?.answer ? 0 : 0);
+      const entry = {
+        name: playerName || "Anonymous",
+        score,
+        total: questions.length,
+        category,
+        difficulty,
+        date: new Date().toLocaleDateString(),
+      };
+      const updated = [...leaderboard, entry]
+        .sort((a, b) => b.score - a.score || b.total - a.total)
+        .slice(0, 20);
+      setLeaderboard(updated);
+      localStorage.setItem("quizLeaderboard", JSON.stringify(updated));
       setScreen("result");
     } else {
       setCurrent(next); setSelected(null); startTimer();
@@ -193,11 +197,82 @@ export default function App() {
   const diffColor = difficulty ? DIFF_COLORS[difficulty] : "#e94560";
   const progress = questions.length ? (current / questions.length) * 100 : 0;
 
+  if (screen === "name") return (
+    <div className="app">
+      <div className="card start-card">
+        <div className="start-emoji">👤</div>
+        <h1>Enter Your Name</h1>
+        <p>Your name will appear on the leaderboard! 🏆</p>
+        <input
+          className="name-input"
+          type="text"
+          placeholder="Your name..."
+          value={nameInput}
+          onChange={(e) => setNameInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && nameInput.trim()) { setPlayerName(nameInput.trim()); setScreen("start"); }}}
+          maxLength={20}
+          autoFocus
+        />
+        <button className="btn-primary" style={{ marginTop: "1rem" }}
+          onClick={() => { setPlayerName(nameInput.trim() || "Anonymous"); setScreen("start"); }}>
+          Let's Go! →
+        </button>
+        <button className="btn-secondary" style={{ marginTop: "0.5rem" }}
+          onClick={() => { setPlayerName("Anonymous"); setScreen("start"); }}>
+          Skip
+        </button>
+      </div>
+    </div>
+  );
+
+  if (screen === "leaderboard") return (
+    <div className="app">
+      <div className="card result-card">
+        <div className="result-emoji">🏆</div>
+        <h2>Leaderboard</h2>
+        <p className="score-msg">Top 20 scores across all categories</p>
+        {leaderboard.length === 0 ? (
+          <div className="lb-empty">No scores yet! Play a game first. 🎮</div>
+        ) : (
+          <div className="lb-list">
+            {leaderboard.map((e, i) => (
+              <div key={i} className={`lb-item ${i === 0 ? "gold" : i === 1 ? "silver" : i === 2 ? "bronze" : ""}`}>
+                <span className="lb-rank">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
+                <div className="lb-info">
+                  <span className="lb-name">{e.name}</span>
+                  <span className="lb-meta">{allQuestions[e.category]?.emoji} {e.category} • ⚡ {e.difficulty} • {e.date}</span>
+                </div>
+                <span className="lb-score" style={{ color: allQuestions[e.category]?.color }}>{e.score}/{e.total}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="result-btns" style={{ marginTop: "1rem" }}>
+          <button className="btn-primary" onClick={() => setScreen("start")}>Back to Menu</button>
+          {leaderboard.length > 0 && (
+            <button className="btn-secondary" onClick={() => { setLeaderboard([]); localStorage.removeItem("quizLeaderboard"); }}>
+              Clear Leaderboard
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   if (screen === "start") return (
     <div className="app">
       <div className="card start-card">
-        <div className="start-emoji">🧠</div>
-        <h1>Quiz App</h1>
+        <div className="start-header">
+          <div>
+            <div className="start-emoji">🧠</div>
+            <h1>Quiz App</h1>
+          </div>
+          <div className="start-actions">
+            <button className="icon-btn" onClick={() => setScreen("leaderboard")} title="Leaderboard">🏆</button>
+            <button className="icon-btn" onClick={() => setScreen("name")} title="Change name">👤</button>
+          </div>
+        </div>
+        {playerName && <div className="player-greeting">👋 Hey, <strong>{playerName}</strong>!</div>}
         <p>Questions shuffle every game — no two rounds are the same! 🎲</p>
 
         <h3 className="section-label">📚 Category</h3>
@@ -207,7 +282,7 @@ export default function App() {
               style={{ "--cat-color": data.color }} onClick={() => setCategory(name)}>
               <span className="cat-emoji">{data.emoji}</span>
               <span className="cat-name">{name}</span>
-              <span className="cat-hs">🏆 {highScores[`${name}-${difficulty || "Easy"}`] || 0}/{DIFF_COUNT[difficulty || "Easy"]}</span>
+              <span className="cat-hs">🏆 {leaderboard.filter(e => e.category === name && e.difficulty === (difficulty || "Easy")).reduce((max, e) => Math.max(max, e.score), 0)}/{DIFF_COUNT[difficulty || "Easy"]}</span>
             </button>
           ))}
         </div>
@@ -245,7 +320,6 @@ export default function App() {
           <span className="score-num" style={{ color }}>{score}</span>
           <span className="score-total">/ {questions.length}</span>
         </div>
-        <div className="hs-banner">🏆 Best: {highScores[`${category}-${difficulty}`] || 0} / {questions.length}</div>
         <p className="score-msg">
           {score === questions.length ? "Perfect! Genius! 🎉" :
            score >= questions.length * 0.6 ? "Great job! Almost perfect!" :
@@ -265,6 +339,7 @@ export default function App() {
         </div>
         <div className="result-btns">
           <button className="btn-primary" style={{ background: color }} onClick={() => startQuiz(category, difficulty)}>Play Again 🎲</button>
+          <button className="btn-secondary" onClick={() => setScreen("leaderboard")}>🏆 Leaderboard</button>
           <button className="btn-secondary" onClick={() => setScreen("start")}>Change Category</button>
         </div>
       </div>
@@ -275,9 +350,7 @@ export default function App() {
     <div className="app">
       <div className="card quiz-card">
         <div className="quiz-header">
-          <span className="q-counter" style={{ color }}>
-            {allQuestions[category].emoji} Q{current + 1}/{questions.length}
-          </span>
+          <span className="q-counter" style={{ color }}>{allQuestions[category].emoji} Q{current + 1}/{questions.length}</span>
           <div className={`timer ${timer <= 5 ? "danger" : ""}`}>⏱ {timer}s</div>
           <span className="q-score">⭐ {score}</span>
         </div>
@@ -293,9 +366,7 @@ export default function App() {
               if (opt === questions[current].answer) cls += " correct";
               else if (opt === selected) cls += " wrong";
             }
-            return (
-              <button key={opt} className={cls} onClick={() => handleSelect(opt)} disabled={!!selected}>{opt}</button>
-            );
+            return <button key={opt} className={cls} onClick={() => handleSelect(opt)} disabled={!!selected}>{opt}</button>;
           })}
         </div>
         {selected && (
