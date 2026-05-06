@@ -1,77 +1,109 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import "./App.css";
 
-const categories = {
+const allQuestions = {
   Science: {
-    emoji: "🔬", color: "#00b4d8",
-    Easy:   [
+    emoji: "🔬",
+    color: "#00b4d8",
+    questions: [
       { q: "Which gas do plants absorb?", options: ["Oxygen", "Nitrogen", "CO2", "Hydrogen"], answer: "CO2" },
-      { q: "What planet is closest to the Sun?", options: ["Venus", "Mercury", "Earth", "Mars"], answer: "Mercury" },
-      { q: "What is H2O?", options: ["Salt", "Water", "Sugar", "Acid"], answer: "Water" },
-    ],
-    Medium: [
-      { q: "What is the chemical symbol for Gold?", options: ["Go", "Gd", "Au", "Ag"], answer: "Au" },
-      { q: "How many bones in the human body?", options: ["196", "206", "216", "226"], answer: "206" },
       { q: "What is the speed of light?", options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "100,000 km/s"], answer: "300,000 km/s" },
-    ],
-    Hard: [
+      { q: "What is the chemical symbol for Gold?", options: ["Go", "Gd", "Au", "Ag"], answer: "Au" },
+      { q: "How many bones are in the human body?", options: ["196", "206", "216", "226"], answer: "206" },
+      { q: "Which planet is closest to the Sun?", options: ["Venus", "Mercury", "Earth", "Mars"], answer: "Mercury" },
       { q: "What is the atomic number of Carbon?", options: ["4", "6", "8", "12"], answer: "6" },
       { q: "What is the powerhouse of the cell?", options: ["Nucleus", "Ribosome", "Mitochondria", "Golgi"], answer: "Mitochondria" },
       { q: "Which particle has no charge?", options: ["Proton", "Electron", "Neutron", "Quark"], answer: "Neutron" },
+      { q: "What is H2O commonly known as?", options: ["Salt", "Water", "Sugar", "Acid"], answer: "Water" },
+      { q: "How many chambers does the human heart have?", options: ["2", "3", "4", "5"], answer: "4" },
+      { q: "What planet is known as the Red Planet?", options: ["Venus", "Jupiter", "Saturn", "Mars"], answer: "Mars" },
+      { q: "What is the largest organ in the human body?", options: ["Liver", "Brain", "Skin", "Lungs"], answer: "Skin" },
+      { q: "Which element is needed for combustion?", options: ["Nitrogen", "Oxygen", "Hydrogen", "Helium"], answer: "Oxygen" },
+      { q: "What force keeps planets in orbit?", options: ["Magnetism", "Friction", "Gravity", "Nuclear"], answer: "Gravity" },
+      { q: "How many planets are in our solar system?", options: ["7", "8", "9", "10"], answer: "8" },
+      { q: "What is the most abundant gas in Earth's atmosphere?", options: ["Oxygen", "CO2", "Nitrogen", "Argon"], answer: "Nitrogen" },
+      { q: "What part of the plant conducts photosynthesis?", options: ["Root", "Stem", "Leaf", "Flower"], answer: "Leaf" },
+      { q: "What is the boiling point of water?", options: ["90°C", "95°C", "100°C", "105°C"], answer: "100°C" },
+      { q: "Which vitamin does sunlight provide?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], answer: "Vitamin D" },
+      { q: "What is DNA short for?", options: ["Deoxyribonucleic Acid", "Dioxin Acid", "Dinitrogen Acid", "Dipeptide Acid"], answer: "Deoxyribonucleic Acid" },
     ],
   },
   History: {
-    emoji: "📜", color: "#f4a261",
-    Easy:   [
+    emoji: "📜",
+    color: "#f4a261",
+    questions: [
       { q: "Who painted the Mona Lisa?", options: ["Van Gogh", "Picasso", "Da Vinci", "Rembrandt"], answer: "Da Vinci" },
+      { q: "In which year did World War II end?", options: ["1943", "1944", "1945", "1946"], answer: "1945" },
       { q: "Which country invented pizza?", options: ["France", "USA", "Italy", "Greece"], answer: "Italy" },
       { q: "Who was the first US President?", options: ["Lincoln", "Washington", "Jefferson", "Adams"], answer: "Washington" },
-    ],
-    Medium: [
-      { q: "In which year did WW2 end?", options: ["1943", "1944", "1945", "1946"], answer: "1945" },
       { q: "Where were the first Olympics held?", options: ["Rome", "Athens", "Sparta", "Cairo"], answer: "Athens" },
-      { q: "Who was the first man on the Moon?", options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "John Glenn"], answer: "Neil Armstrong" },
-    ],
-    Hard: [
       { q: "In what year was the Magna Carta signed?", options: ["1215", "1315", "1415", "1515"], answer: "1215" },
       { q: "Who was the last Pharaoh of Egypt?", options: ["Nefertiti", "Cleopatra", "Hatshepsut", "Berenice"], answer: "Cleopatra" },
       { q: "Which empire was ruled by Genghis Khan?", options: ["Ottoman", "Roman", "Mongol", "Persian"], answer: "Mongol" },
+      { q: "Who was the first man on the Moon?", options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "John Glenn"], answer: "Neil Armstrong" },
+      { q: "In which year did the Titanic sink?", options: ["1910", "1912", "1914", "1916"], answer: "1912" },
+      { q: "Who invented the telephone?", options: ["Edison", "Tesla", "Bell", "Marconi"], answer: "Bell" },
+      { q: "Which country was Adolf Hitler born in?", options: ["Germany", "Austria", "Poland", "Switzerland"], answer: "Austria" },
+      { q: "What year did World War I begin?", options: ["1912", "1913", "1914", "1915"], answer: "1914" },
+      { q: "Who wrote Romeo and Juliet?", options: ["Dickens", "Shakespeare", "Austen", "Chaucer"], answer: "Shakespeare" },
+      { q: "Which ancient wonder was in Alexandria?", options: ["Colossus", "Lighthouse", "Hanging Gardens", "Pyramids"], answer: "Lighthouse" },
+      { q: "Who was the first female Prime Minister of the UK?", options: ["May", "Thatcher", "Blair", "Churchill"], answer: "Thatcher" },
+      { q: "Which country dropped the atomic bomb in 1945?", options: ["Russia", "UK", "USA", "France"], answer: "USA" },
+      { q: "Who discovered America in 1492?", options: ["Vespucci", "Magellan", "Columbus", "Drake"], answer: "Columbus" },
+      { q: "What was the name of the first artificial satellite?", options: ["Vostok", "Apollo", "Sputnik", "Explorer"], answer: "Sputnik" },
+      { q: "Which wall divided East and West Berlin?", options: ["Iron Curtain", "Berlin Wall", "Maginot Line", "Hadrian's Wall"], answer: "Berlin Wall" },
     ],
   },
   Sports: {
-    emoji: "⚽", color: "#2dc653",
-    Easy:   [
-      { q: "How many players in a football team?", options: ["9", "10", "11", "12"], answer: "11" },
-      { q: "How many rings on the Olympic flag?", options: ["4", "5", "6", "7"], answer: "5" },
+    emoji: "⚽",
+    color: "#2dc653",
+    questions: [
+      { q: "How many players are in a football team?", options: ["9", "10", "11", "12"], answer: "11" },
+      { q: "Which country has won the most FIFA World Cups?", options: ["Germany", "Argentina", "Italy", "Brazil"], answer: "Brazil" },
+      { q: "How many rings are on the Olympic flag?", options: ["4", "5", "6", "7"], answer: "5" },
       { q: "Which sport is played at Wimbledon?", options: ["Cricket", "Tennis", "Badminton", "Squash"], answer: "Tennis" },
-    ],
-    Medium: [
-      { q: "Which country won the most FIFA World Cups?", options: ["Germany", "Argentina", "Italy", "Brazil"], answer: "Brazil" },
       { q: "How long is a marathon?", options: ["40km", "41km", "42.195km", "43km"], answer: "42.195km" },
       { q: "In which sport do you use a puck?", options: ["Football", "Ice Hockey", "Baseball", "Polo"], answer: "Ice Hockey" },
-    ],
-    Hard: [
       { q: "Who has won the most Grand Slam titles?", options: ["Federer", "Nadal", "Djokovic", "Sampras"], answer: "Djokovic" },
-      { q: "In what year were women first allowed in Olympics?", options: ["1896", "1900", "1920", "1928"], answer: "1900" },
       { q: "How many points is a try worth in rugby?", options: ["3", "4", "5", "6"], answer: "5" },
+      { q: "Which country hosted the 2016 Olympics?", options: ["China", "UK", "Brazil", "Japan"], answer: "Brazil" },
+      { q: "How many players are in a basketball team?", options: ["4", "5", "6", "7"], answer: "5" },
+      { q: "What is the diameter of a basketball hoop in inches?", options: ["16", "18", "20", "22"], answer: "18" },
+      { q: "In which sport is a shuttlecock used?", options: ["Tennis", "Squash", "Badminton", "Racquetball"], answer: "Badminton" },
+      { q: "How many holes are in a standard golf course?", options: ["9", "12", "18", "21"], answer: "18" },
+      { q: "Which country invented basketball?", options: ["USA", "Canada", "UK", "France"], answer: "USA" },
+      { q: "How long is an Olympic swimming pool?", options: ["25m", "50m", "75m", "100m"], answer: "50m" },
+      { q: "Which sport uses a pommel horse?", options: ["Athletics", "Gymnastics", "Equestrian", "Polo"], answer: "Gymnastics" },
+      { q: "How many sets are in a standard tennis match (men)?", options: ["3", "5", "4", "2"], answer: "5" },
+      { q: "Which country won the first Cricket World Cup?", options: ["Australia", "India", "West Indies", "England"], answer: "West Indies" },
+      { q: "How many minutes in a standard football match?", options: ["80", "85", "90", "95"], answer: "90" },
+      { q: "In which sport can you score a 'hat-trick'?", options: ["Only football", "Only cricket", "Both football & cricket", "Only hockey"], answer: "Both football & cricket" },
     ],
   },
   Geography: {
-    emoji: "🌍", color: "#9b5de5",
-    Easy:   [
+    emoji: "🌍",
+    color: "#9b5de5",
+    questions: [
       { q: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
       { q: "What is the largest ocean?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: "Pacific" },
       { q: "How many continents are there?", options: ["5", "6", "7", "8"], answer: "7" },
-    ],
-    Medium: [
       { q: "Which is the longest river?", options: ["Amazon", "Nile", "Yangtze", "Mississippi"], answer: "Nile" },
       { q: "What is the smallest country?", options: ["Monaco", "San Marino", "Vatican City", "Liechtenstein"], answer: "Vatican City" },
       { q: "Which country has the most natural lakes?", options: ["USA", "Russia", "Brazil", "Canada"], answer: "Canada" },
-    ],
-    Hard: [
       { q: "What is the capital of Kazakhstan?", options: ["Almaty", "Astana", "Bishkek", "Tashkent"], answer: "Astana" },
       { q: "Which is the deepest lake in the world?", options: ["Caspian Sea", "Lake Superior", "Lake Baikal", "Lake Tanganyika"], answer: "Lake Baikal" },
       { q: "What is the highest capital city?", options: ["Kathmandu", "Quito", "La Paz", "Bogota"], answer: "La Paz" },
+      { q: "Which country has the longest coastline?", options: ["USA", "Russia", "Australia", "Canada"], answer: "Canada" },
+      { q: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Brisbane"], answer: "Canberra" },
+      { q: "Which is the largest desert in the world?", options: ["Sahara", "Arabian", "Antarctic", "Gobi"], answer: "Antarctic" },
+      { q: "What is the capital of Nepal?", options: ["Pokhara", "Kathmandu", "Bhaktapur", "Lalitpur"], answer: "Kathmandu" },
+      { q: "Which country has the most population?", options: ["USA", "India", "China", "Russia"], answer: "India" },
+      { q: "What is the tallest mountain in the world?", options: ["K2", "Kangchenjunga", "Everest", "Lhotse"], answer: "Everest" },
+      { q: "Which ocean is the smallest?", options: ["Atlantic", "Indian", "Arctic", "Southern"], answer: "Arctic" },
+      { q: "What is the largest country by area?", options: ["China", "USA", "Canada", "Russia"], answer: "Russia" },
+      { q: "Which continent is the largest?", options: ["Africa", "Asia", "Europe", "North America"], answer: "Asia" },
+      { q: "What is the capital of Japan?", options: ["Osaka", "Kyoto", "Tokyo", "Hiroshima"], answer: "Tokyo" },
+      { q: "Which country is known as the Land of the Rising Sun?", options: ["China", "Korea", "Japan", "Thailand"], answer: "Japan" },
     ],
   },
 };
@@ -79,23 +111,26 @@ const categories = {
 const DIFFICULTIES = ["Easy", "Medium", "Hard"];
 const DIFF_COLORS = { Easy: "#2dc653", Medium: "#f4a261", Hard: "#e94560" };
 const DIFF_TIMES = { Easy: 20, Medium: 15, Hard: 10 };
+const DIFF_COUNT = { Easy: 5, Medium: 8, Hard: 10 };
 
-function playSound(type) {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const o = ctx.createOscillator();
-  const g = ctx.createGain();
-  o.connect(g); g.connect(ctx.destination);
-  if (type === "correct") { o.frequency.setValueAtTime(520, ctx.currentTime); o.frequency.setValueAtTime(660, ctx.currentTime + 0.1); g.gain.setValueAtTime(0.3, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4); }
-  if (type === "wrong") { o.frequency.setValueAtTime(200, ctx.currentTime); g.gain.setValueAtTime(0.3, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3); }
-  if (type === "tick") { o.frequency.setValueAtTime(800, ctx.currentTime); g.gain.setValueAtTime(0.05, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05); }
-  if (type === "complete") { [440,550,660,880].forEach((f,i) => { o.frequency.setValueAtTime(f, ctx.currentTime + i*0.1); }); g.gain.setValueAtTime(0.3, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6); }
-  o.start(); o.stop(ctx.currentTime + 0.6);
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function getQuestions(cat, diff) {
+  const count = DIFF_COUNT[diff];
+  const shuffled = shuffle(allQuestions[cat].questions);
+  return shuffled.slice(0, count).map(q => ({
+    ...q,
+    options: shuffle(q.options),
+  }));
 }
 
 export default function App() {
   const [screen, setScreen] = useState("start");
   const [category, setCategory] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
+  const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
@@ -103,12 +138,10 @@ export default function App() {
   const [timer, setTimer] = useState(15);
   const [timerInterval, setTimerInterval] = useState(null);
   const [highScores, setHighScores] = useState(() => JSON.parse(localStorage.getItem("quizHighScores") || "{}"));
-  const [soundOn, setSoundOn] = useState(true);
-
-  const sound = (type) => { if (soundOn) try { playSound(type); } catch(e) {} };
 
   const startQuiz = (cat, diff) => {
-    setCategory(cat); setDifficulty(diff);
+    const qs = getQuestions(cat, diff);
+    setCategory(cat); setDifficulty(diff); setQuestions(qs);
     setCurrent(0); setScore(0); setSelected(null);
     setAnswers([]); setScreen("quiz");
     startTimer(diff);
@@ -120,7 +153,6 @@ export default function App() {
     clearInterval(timerInterval);
     const id = setInterval(() => {
       setTimer((t) => {
-        if (t <= 3) sound("tick");
         if (t <= 1) { clearInterval(id); handleNext(true); return 0; }
         return t - 1;
       });
@@ -132,26 +164,21 @@ export default function App() {
     if (selected) return;
     clearInterval(timerInterval);
     setSelected(opt);
-    const q = categories[category][difficulty][current];
-    const isCorrect = opt === q.answer;
-    if (isCorrect) { setScore((s) => s + 1); sound("correct"); }
-    else sound("wrong");
-    setAnswers((a) => [...a, { q: q.q, selected: opt, correct: q.answer, isCorrect }]);
+    const isCorrect = opt === questions[current].answer;
+    if (isCorrect) setScore((s) => s + 1);
+    setAnswers((a) => [...a, { q: questions[current].q, selected: opt, correct: questions[current].answer, isCorrect }]);
   };
 
   const handleNext = (auto = false) => {
     if (auto && !selected) {
-      const q = categories[category][difficulty][current];
-      setAnswers((a) => [...a, { q: q.q, selected: "⏱ Time up!", correct: q.answer, isCorrect: false }]);
+      setAnswers((a) => [...a, { q: questions[current].q, selected: "⏱ Time up!", correct: questions[current].answer, isCorrect: false }]);
     }
     const next = current + 1;
-    const total = categories[category][difficulty].length;
-    if (next >= total) {
+    if (next >= questions.length) {
       clearInterval(timerInterval);
-      sound("complete");
       const key = `${category}-${difficulty}`;
       const prev = highScores[key] || 0;
-      if (score + (selected && selected === categories[category][difficulty][current]?.answer ? 1 : 0) > prev) {
+      if (score > prev) {
         const updated = { ...highScores, [key]: score };
         setHighScores(updated);
         localStorage.setItem("quizHighScores", JSON.stringify(updated));
@@ -162,29 +189,25 @@ export default function App() {
     }
   };
 
-  const questions = category && difficulty ? categories[category][difficulty] : [];
-  const progress = (current / (questions.length || 1)) * 100;
-  const color = category ? categories[category].color : "#e94560";
+  const color = category ? allQuestions[category].color : "#e94560";
   const diffColor = difficulty ? DIFF_COLORS[difficulty] : "#e94560";
+  const progress = questions.length ? (current / questions.length) * 100 : 0;
 
   if (screen === "start") return (
     <div className="app">
       <div className="card start-card">
-        <div className="top-controls">
-          <button className="sound-btn" onClick={() => setSoundOn(s => !s)}>{soundOn ? "🔊" : "🔇"}</button>
-        </div>
         <div className="start-emoji">🧠</div>
         <h1>Quiz App</h1>
-        <p>Choose a category & difficulty!</p>
+        <p>Questions shuffle every game — no two rounds are the same! 🎲</p>
 
         <h3 className="section-label">📚 Category</h3>
         <div className="categories">
-          {Object.entries(categories).map(([name, data]) => (
+          {Object.entries(allQuestions).map(([name, data]) => (
             <button key={name} className={`category-btn ${category === name ? "selected" : ""}`}
               style={{ "--cat-color": data.color }} onClick={() => setCategory(name)}>
               <span className="cat-emoji">{data.emoji}</span>
               <span className="cat-name">{name}</span>
-              <span className="cat-hs">🏆 {highScores[`${name}-${difficulty || "Easy"}`] || 0}/{data.Easy.length}</span>
+              <span className="cat-hs">🏆 {highScores[`${name}-${difficulty || "Easy"}`] || 0}/{DIFF_COUNT[difficulty || "Easy"]}</span>
             </button>
           ))}
         </div>
@@ -195,7 +218,7 @@ export default function App() {
             <button key={d} className={`diff-btn ${difficulty === d ? "selected" : ""}`}
               style={{ "--diff-color": DIFF_COLORS[d] }} onClick={() => setDifficulty(d)}>
               <span>{d}</span>
-              <span className="diff-time">⏱ {DIFF_TIMES[d]}s</span>
+              <span className="diff-time">⏱ {DIFF_TIMES[d]}s • {DIFF_COUNT[d]}Q</span>
             </button>
           ))}
         </div>
@@ -214,7 +237,7 @@ export default function App() {
       <div className="card result-card">
         <div className="result-emoji">{score === questions.length ? "🏆" : score >= questions.length * 0.6 ? "🎉" : "😊"}</div>
         <div className="result-badges">
-          <span style={{ color }}>{categories[category].emoji} {category}</span>
+          <span style={{ color }}>{allQuestions[category].emoji} {category}</span>
           <span style={{ color: diffColor }}>⚡ {difficulty}</span>
         </div>
         <h2>Quiz Complete!</h2>
@@ -222,11 +245,9 @@ export default function App() {
           <span className="score-num" style={{ color }}>{score}</span>
           <span className="score-total">/ {questions.length}</span>
         </div>
-        <div className="hs-banner">
-          🏆 Best: {highScores[`${category}-${difficulty}`] || 0} / {questions.length}
-        </div>
+        <div className="hs-banner">🏆 Best: {highScores[`${category}-${difficulty}`] || 0} / {questions.length}</div>
         <p className="score-msg">
-          {score === questions.length ? "Perfect! You're a genius! 🎉" :
+          {score === questions.length ? "Perfect! Genius! 🎉" :
            score >= questions.length * 0.6 ? "Great job! Almost perfect!" :
            "Keep practicing, you'll get better!"}
         </p>
@@ -243,7 +264,7 @@ export default function App() {
           ))}
         </div>
         <div className="result-btns">
-          <button className="btn-primary" style={{ background: color }} onClick={() => startQuiz(category, difficulty)}>Play Again →</button>
+          <button className="btn-primary" style={{ background: color }} onClick={() => startQuiz(category, difficulty)}>Play Again 🎲</button>
           <button className="btn-secondary" onClick={() => setScreen("start")}>Change Category</button>
         </div>
       </div>
@@ -255,7 +276,7 @@ export default function App() {
       <div className="card quiz-card">
         <div className="quiz-header">
           <span className="q-counter" style={{ color }}>
-            {categories[category].emoji} Q{current + 1}/{questions.length}
+            {allQuestions[category].emoji} Q{current + 1}/{questions.length}
           </span>
           <div className={`timer ${timer <= 5 ? "danger" : ""}`}>⏱ {timer}s</div>
           <span className="q-score">⭐ {score}</span>
