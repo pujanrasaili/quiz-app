@@ -5,26 +5,29 @@ A sleek, feature-rich quiz app built with React + Vite.
 ## ✨ Features
 
 - 🔬📜⚽🌍 **4 Categories** — Science, History, Sports, Geography
-- ⚡ **3 Difficulty Levels** — Easy (20s), Medium (15s), Hard (10s)
+- ❓ **20 questions per category** — 80 total questions
+- 🎲 **Random shuffle every game** — never the same round twice!
+- 🔀 **Answer options shuffled** — no memorizing positions
+- ⚡ **3 Difficulty Levels** — Easy (5Q/20s), Medium (8Q/15s), Hard (10Q/10s)
 - ⏱ **Countdown Timer** per question with danger animation
 - ⭐ **Live score tracking** during the quiz
-- 🏆 **High score tracking** saved locally per category & difficulty
-- 🔊 **Sound effects** with mute toggle
+- 🏆 **High score tracking** saved per category & difficulty
 - ✅ **Instant answer feedback** (green = correct, red = wrong)
+- ⏱ **Time up handling** — auto moves to next question
 - 📋 **Full answer review** at the end
 - 🎯 **Performance emoji** based on your score
 - 💫 **Smooth animations** & modern glassmorphism UI
 
 ## 🚀 Live Demo
 
-👉 [quiz-app on Vercel](https://quiz-app.vercel.app)
+👉 [Your Vercel URL here]
 
 ## 🛠 Tech Stack
 
 - [React](https://react.dev/) — UI library
 - [Vite](https://vitejs.dev/) — lightning-fast bundler
-- Web Audio API — for sound effects
-- CSS Glassmorphism — for modern styling
+- CSS Glassmorphism — modern styling
+- localStorage — high score persistence
 
 ## 📦 Getting Started
 
@@ -45,19 +48,18 @@ npm run build
 2. Choose a **difficulty** (Easy, Medium, Hard)
 3. Click **Start Quiz**
 4. Answer before the **timer** runs out
-5. See instant feedback after each answer
-6. Review all answers & beat your **high score**!
+5. Questions & answers **shuffle every game!**
+6. Review answers & beat your **high score** 🏆
 
 ## ⚡ Difficulty Levels
 
-| Level | Time per Question | 
-|-------|------------------|
-| Easy | 20 seconds |
-| Medium | 15 seconds |
-| Hard | 10 seconds |
+| Level | Questions | Time per Q |
+|-------|-----------|------------|
+| Easy | 5 | 20 seconds |
+| Medium | 8 | 15 seconds |
+| Hard | 10 | 10 seconds |
 
 ## 📁 Project Structure
-
 quiz-app/
 ├── src/
 │   ├── App.jsx      # Main component & quiz logic
