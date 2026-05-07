@@ -205,3 +205,34 @@ h2 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
 .lb-name { color: #fff; font-weight: 600; font-size: 0.95rem; }
 .lb-meta { color: rgba(255,255,255,0.4); font-size: 0.72rem; }
 .lb-score { font-weight: 700; font-size: 1rem; }
+
+/* LIFELINES */
+.lifelines-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.lifeline-btn {
+  background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 20px; padding: 5px 14px; color: #fff;
+  font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+.lifeline-btn:hover:not(:disabled) { background: rgba(255,255,255,0.15); transform: scale(1.05); }
+.lifeline-btn:disabled { cursor: default; }
+.lifeline-btn.used { opacity: 0.35; border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+
+.option.eliminated {
+  opacity: 0.25; cursor: not-allowed;
+  text-decoration: line-through; color: rgba(255,255,255,0.3);
+}
+
+/* FORFEIT */
+.forfeit-btn {
+  width: 100%; margin-top: 0.75rem; padding: 0.6rem;
+  background: transparent; border: 1px solid rgba(231,76,60,0.3);
+  border-radius: 12px; color: rgba(231,76,60,0.6);
+  font-size: 0.78rem; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all 0.2s;
+}
+.forfeit-btn:hover { background: rgba(231,76,60,0.1); color: #e74c3c; border-color: #e74c3c; }
