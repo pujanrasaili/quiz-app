@@ -14,7 +14,16 @@ A sleek, feature-rich quiz app built with React + Vite.
 - ⭐ **Live score tracking** during the quiz
 - ✅ **Instant answer feedback** (green = correct, red = wrong)
 - ⏱ **Auto skip** when timer runs out
-- 🏳️ **Forfeit** — quit the game anytime and see your score
+- 🏳️ **Forfeit** — quit anytime and save your score
+
+### 🔥 Streak System
+- 🔥 **Streak counter** — tracks consecutive correct answers
+- ⚡ **Combo bonus points** — get extra points for streaks!
+  - 3 in a row → +1 bonus
+  - 4 in a row → +2 bonus
+  - 5+ in a row → +3 bonus
+- 💥 **Bonus popup animation** when streak triggers
+- 🏆 **Best streak** shown on result screen
 
 ### 💡 Lifelines (2 per game)
 - **50/50** — removes 2 wrong answers instantly
@@ -26,7 +35,6 @@ A sleek, feature-rich quiz app built with React + Vite.
 - 🏆 **Top 20 leaderboard** saved locally
 - 🥇🥈🥉 **Gold, silver, bronze** for top 3
 - 📊 Shows category, difficulty & date
-- Forfeit & skip scores also saved
 
 ### 🎨 UI
 - 📋 **Full answer review** at the end
@@ -63,9 +71,10 @@ npm run build
 2. Select a **category** (Science, History, Sports, Geography)
 3. Choose a **difficulty** (Easy, Medium, Hard)
 4. Click **Start Quiz**
-5. Use **lifelines** wisely — only 1 of each per game!
-6. **Forfeit** anytime if you want to stop early
-7. Check your rank on the **🏆 Leaderboard**
+5. Build a **streak** for bonus points 🔥
+6. Use **lifelines** wisely — only 1 of each per game!
+7. **Forfeit** anytime if you want to stop early
+8. Check your rank on the **🏆 Leaderboard**
 
 ## ⚡ Difficulty Levels
 
@@ -74,6 +83,14 @@ npm run build
 | Easy | 5 | 20 seconds |
 | Medium | 8 | 15 seconds |
 | Hard | 10 | 10 seconds |
+
+## 🔥 Streak Bonuses
+
+| Streak | Bonus Points |
+|--------|-------------|
+| 3 in a row | +1 |
+| 4 in a row | +2 |
+| 5+ in a row | +3 |
 
 ## 💡 Lifelines
 

@@ -132,25 +132,18 @@ export default function App() {
   const [playerName, setPlayerName] = useState("");
   const [nameInput, setNameInput] = useState("");
   const [leaderboard, setLeaderboard] = useState(() => JSON.parse(localStorage.getItem("quizLeaderboard") || "[]"));
-
-  // Lifelines
   const [lifelines, setLifelines] = useState({ fifty: true, skip: true });
   const [eliminated, setEliminated] = useState([]);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [bonus, setBonus] = useState(0);
+  const [showBonus, setShowBonus] = useState(false);
 
-  const useFiftyFifty = () => {
-    if (!lifelines.fifty || selected) return;
-    const q = questions[current];
-    const wrong = q.options.filter(o => o !== q.answer);
-    const toElim = shuffle(wrong).slice(0, 2);
-    setEliminated(toElim);
-    setLifelines(l => ({ ...l, fifty: false }));
-  };
-
-  const useSkip = () => {
-    if (!lifelines.skip || selected) return;
-    setLifelines(l => ({ ...l, skip: false }));
-    setEliminated([]);
-    handleNext(true, true);
+  const saveToLeaderboard = (finalScore) => {
+    const entry = { name: playerName || "Anonymous", score: finalScore, total: questions.length, category, difficulty, date: new Date().toLocaleDateString() };
+    const updated = [...leaderboard, entry].sort((a, b) => b.score - a.score).slice(0, 20);
+    setLeaderboard(updated);
+    localStorage.setItem("quizLeaderboard", JSON.stringify(updated));
   };
 
   const startQuiz = (cat, diff) => {
@@ -160,6 +153,7 @@ export default function App() {
     setAnswers([]); setScreen("quiz");
     setLifelines({ fifty: true, skip: true });
     setEliminated([]);
+    setStreak(0); setBestStreak(0); setBonus(0);
     startTimer(diff);
   };
 
@@ -181,7 +175,24 @@ export default function App() {
     clearInterval(timerInterval);
     setSelected(opt);
     const isCorrect = opt === questions[current].answer;
-    if (isCorrect) setScore((s) => s + 1);
+    let newScore = score;
+    if (isCorrect) {
+      newScore = score + 1;
+      setScore(newScore);
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+      if (newStreak > bestStreak) setBestStreak(newStreak);
+      if (newStreak >= 3) {
+        const b = newStreak >= 5 ? 3 : newStreak >= 4 ? 2 : 1;
+        setBonus(b);
+        setShowBonus(true);
+        newScore = newScore + b;
+        setScore(newScore);
+        setTimeout(() => setShowBonus(false), 1500);
+      }
+    } else {
+      setStreak(0);
+    }
     setAnswers((a) => [...a, { q: questions[current].q, selected: opt, correct: questions[current].answer, isCorrect }]);
   };
 
@@ -194,14 +205,34 @@ export default function App() {
     const next = current + 1;
     if (next >= questions.length) {
       clearInterval(timerInterval);
-      const entry = { name: playerName || "Anonymous", score, total: questions.length, category, difficulty, date: new Date().toLocaleDateString() };
-      const updated = [...leaderboard, entry].sort((a, b) => b.score - a.score).slice(0, 20);
-      setLeaderboard(updated);
-      localStorage.setItem("quizLeaderboard", JSON.stringify(updated));
+      saveToLeaderboard(score);
       setScreen("result");
     } else {
       setCurrent(next); setSelected(null); setEliminated([]); startTimer();
     }
+  };
+
+  const useFiftyFifty = () => {
+    if (!lifelines.fifty || selected) return;
+    const q = questions[current];
+    const wrong = q.options.filter(o => o !== q.answer);
+    setEliminated(shuffle(wrong).slice(0, 2));
+    setLifelines(l => ({ ...l, fifty: false }));
+  };
+
+  const useSkip = () => {
+    if (!lifelines.skip || selected) return;
+    clearInterval(timerInterval);
+    setLifelines(l => ({ ...l, skip: false }));
+    setEliminated([]);
+    setStreak(0);
+    handleNext(false, true);
+  };
+
+  const forfeit = () => {
+    clearInterval(timerInterval);
+    saveToLeaderboard(score);
+    setScreen("result");
   };
 
   const color = category ? allQuestions[category].color : "#e94560";
@@ -214,14 +245,12 @@ export default function App() {
         <div className="start-emoji">👤</div>
         <h1>Quiz App</h1>
         <p>Enter your name to appear on the leaderboard! 🏆</p>
-        <input className="name-input" type="text" placeholder="Your name..." value={nameInput}
-          onChange={(e) => setNameInput(e.target.value)}
+        <input className="name-input" type="text" placeholder="Your name..."
+          value={nameInput} onChange={(e) => setNameInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") { setPlayerName(nameInput.trim() || "Anonymous"); setScreen("start"); }}}
           maxLength={20} autoFocus />
         <button className="btn-primary" style={{ marginTop: "1rem" }}
-          onClick={() => { setPlayerName(nameInput.trim() || "Anonymous"); setScreen("start"); }}>
-          Let's Go! →
-        </button>
+          onClick={() => { setPlayerName(nameInput.trim() || "Anonymous"); setScreen("start"); }}>Let's Go! →</button>
         <button className="btn-secondary" style={{ marginTop: "0.5rem" }}
           onClick={() => { setPlayerName("Anonymous"); setScreen("start"); }}>Skip</button>
       </div>
@@ -274,7 +303,7 @@ export default function App() {
           </div>
         </div>
         {playerName && <div className="player-greeting">👋 Hey, <strong>{playerName}</strong>!</div>}
-        <p>Questions shuffle every game 🎲 • 2 lifelines per game 💡</p>
+        <p>Questions shuffle every game 🎲 • 2 lifelines 💡 • Streak bonus 🔥</p>
 
         <h3 className="section-label">📚 Category</h3>
         <div className="categories">
@@ -283,7 +312,7 @@ export default function App() {
               style={{ "--cat-color": data.color }} onClick={() => setCategory(name)}>
               <span className="cat-emoji">{data.emoji}</span>
               <span className="cat-name">{name}</span>
-              <span className="cat-hs">🏆 {leaderboard.filter(e => e.category === name).reduce((max, e) => Math.max(max, e.score), 0)}/{DIFF_COUNT[difficulty || "Easy"]}</span>
+              <span className="cat-hs">🏆 {leaderboard.filter(e => e.category === name).reduce((max, e) => Math.max(max, e.score || 0), 0)}/{DIFF_COUNT[difficulty || "Easy"]}</span>
             </button>
           ))}
         </div>
@@ -321,6 +350,8 @@ export default function App() {
           <span className="score-num" style={{ color }}>{score}</span>
           <span className="score-total">/ {questions.length}</span>
         </div>
+        <div className="hs-banner">🏆 Best: {leaderboard.filter(e => e.category === category && e.difficulty === difficulty).reduce((max, e) => Math.max(max, e.score || 0), 0)} / {questions.length}</div>
+        {bestStreak > 0 && <div className="streak-banner">🔥 Best Streak: {bestStreak} in a row!</div>}
         <p className="score-msg">
           {score === questions.length ? "Perfect! Genius! 🎉" :
            score >= questions.length * 0.6 ? "Great job! Almost perfect!" :
@@ -349,27 +380,26 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="card quiz-card">
+      <div className="card quiz-card" style={{ position: "relative" }}>
         <div className="quiz-header">
           <span className="q-counter" style={{ color }}>{allQuestions[category].emoji} Q{current + 1}/{questions.length}</span>
           <div className={`timer ${timer <= 5 ? "danger" : ""}`}>⏱ {timer}s</div>
-          <span className="q-score">⭐ {score}</span>
+          <div className="score-streak">
+            <span className="q-score">⭐ {score}</span>
+            {streak >= 2 && <span className="streak-badge">🔥 x{streak}</span>}
+          </div>
         </div>
 
+        {showBonus && <div className="bonus-popup">+{bonus} Bonus! 🔥</div>}
+
         <div className="lifelines-row">
-          <button
-            className={`lifeline-btn ${!lifelines.fifty ? "used" : ""}`}
-            onClick={useFiftyFifty}
-            disabled={!lifelines.fifty || !!selected}
-            title="50/50 — Remove 2 wrong answers">
-            {lifelines.fifty ? "50/50" : "✗ 50/50"}
+          <button className={`lifeline-btn ${!lifelines.fifty ? "used" : ""}`}
+            onClick={useFiftyFifty} disabled={!lifelines.fifty || !!selected}>
+            {lifelines.fifty ? "💡 50/50" : "✗ 50/50"}
           </button>
           <div className="diff-badge" style={{ color: diffColor, borderColor: diffColor }}>⚡ {difficulty}</div>
-          <button
-            className={`lifeline-btn ${!lifelines.skip ? "used" : ""}`}
-            onClick={useSkip}
-            disabled={!lifelines.skip || !!selected}
-            title="Skip — Skip this question">
+          <button className={`lifeline-btn ${!lifelines.skip ? "used" : ""}`}
+            onClick={useSkip} disabled={!lifelines.skip || !!selected}>
             {lifelines.skip ? "⏭ Skip" : "✗ Skip"}
           </button>
         </div>
@@ -389,8 +419,7 @@ export default function App() {
               else if (opt === selected) cls += " wrong";
             }
             return (
-              <button key={opt} className={cls}
-                onClick={() => handleSelect(opt)}
+              <button key={opt} className={cls} onClick={() => handleSelect(opt)}
                 disabled={!!selected || eliminated.includes(opt)}>
                 {eliminated.includes(opt) ? "—" : opt}
               </button>
@@ -404,14 +433,7 @@ export default function App() {
           </button>
         )}
 
-        <button className="forfeit-btn" onClick={() => {
-          clearInterval(timerInterval);
-          const entry = { name: playerName || "Anonymous", score, total: questions.length, category, difficulty, date: new Date().toLocaleDateString() };
-          const updated = [...leaderboard, entry].sort((a, b) => b.score - a.score).slice(0, 20);
-          setLeaderboard(updated);
-          localStorage.setItem("quizLeaderboard", JSON.stringify(updated));
-          setScreen("result");
-        }}>🏳️ Forfeit Game</button>
+        <button className="forfeit-btn" onClick={forfeit}>🏳️ Forfeit Game</button>
       </div>
     </div>
   );
