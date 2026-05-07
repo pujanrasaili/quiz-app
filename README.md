@@ -14,12 +14,19 @@ A sleek, feature-rich quiz app built with React + Vite.
 - ⭐ **Live score tracking** during the quiz
 - ✅ **Instant answer feedback** (green = correct, red = wrong)
 - ⏱ **Auto skip** when timer runs out
+- 🏳️ **Forfeit** — quit the game anytime and see your score
+
+### 💡 Lifelines (2 per game)
+- **50/50** — removes 2 wrong answers instantly
+- **⏭ Skip** — skip a question without penalty
+- Both are one-time use per game
 
 ### 🏆 Leaderboard
 - 👤 **Player name entry** before starting
 - 🏆 **Top 20 leaderboard** saved locally
 - 🥇🥈🥉 **Gold, silver, bronze** for top 3
-- 📊 Shows category, difficulty & date for each entry
+- 📊 Shows category, difficulty & date
+- Forfeit & skip scores also saved
 
 ### 🎨 UI
 - 📋 **Full answer review** at the end
@@ -35,7 +42,7 @@ A sleek, feature-rich quiz app built with React + Vite.
 - [React](https://react.dev/) — UI library
 - [Vite](https://vitejs.dev/) — lightning-fast bundler
 - CSS Glassmorphism — modern styling
-- localStorage — leaderboard & score persistence
+- localStorage — leaderboard persistence
 
 ## 📦 Getting Started
 
@@ -56,8 +63,8 @@ npm run build
 2. Select a **category** (Science, History, Sports, Geography)
 3. Choose a **difficulty** (Easy, Medium, Hard)
 4. Click **Start Quiz**
-5. Answer before the **timer** runs out
-6. Questions & answers **shuffle every game!**
+5. Use **lifelines** wisely — only 1 of each per game!
+6. **Forfeit** anytime if you want to stop early
 7. Check your rank on the **🏆 Leaderboard**
 
 ## ⚡ Difficulty Levels
@@ -67,6 +74,13 @@ npm run build
 | Easy | 5 | 20 seconds |
 | Medium | 8 | 15 seconds |
 | Hard | 10 | 10 seconds |
+
+## 💡 Lifelines
+
+| Lifeline | Effect |
+|----------|--------|
+| 50/50 | Removes 2 wrong answers |
+| ⏭ Skip | Skips question, no penalty |
 
 ## 📁 Project Structure
 quiz-app/
