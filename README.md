@@ -111,3 +111,6 @@ quiz-app/
 ## 📄 License
 
 MIT
+
+## 👨‍💻 Author
+**Pujan Rasaili**
